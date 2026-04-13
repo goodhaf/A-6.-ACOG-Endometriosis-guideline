@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACOG 임상 진료 지침 제11호: 자궁내막증 관리 (2026 개정)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Warm Clinical Neutrals (Stone, Teal, Rose) -->
+    <!-- Application Structure Plan: A single-page dashboard structured to highlight the paradigm shift. 
+         1. Hero: Executive Summary. 
+         2. Key Shifts (Past vs 2026): Grid layout directly addressing the user's prompt. 
+         3. Diagnostic Algorithm: Interactive steps replacing rigid flowcharts. 
+         4. Treatment Trends: Chart.js visualization showing the shift from surgical to medical management. 
+         This structure immediately answers the "what changed" question before diving into details. -->
+    <!-- Visualization & Content Choices: 
+         - Paradigm Shift: Grid of cards (Inform/Compare) -> Side-by-side textual contrast -> Quick comprehension of guideline changes -> HTML/Tailwind.
+         - Diagnostic Flow: Clickable horizontal steps (Organize) -> Reveals text details -> Reduces cognitive load compared to complex SVGs -> HTML/Tailwind + JS.
+         - Treatment Paradigm Data: Stacked Bar Chart (Compare/Change) -> Visualizes the drop in initial surgeries vs rise in medical management -> Chart.js.
+         - CONFIRMING: NO SVG used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 800: '#292524', 900: '#1c1917' },
+                        teal: { 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e' },
+                        rose: { 500: '#f43f5e' }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base styles */
+        body { background-color: #fafaf9; color: #292524; line-height: 1.6; scroll-behavior: smooth; }
+        
+        /* Chart Container styling adhering to requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Constrain max width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 50vh; /* Responsive base height */
+            min-height: 300px;
+            max-height: 450px; /* Prevent excessive height */
+        }
+        
+        /* Utility classes for shapes instead of SVG */
+        .circle-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            font-weight: bold;
+        }
+        
+        /* Interactive Step Transitions */
+        .step-content {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .step-content.active {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 1rem;
+        }
+        .step-btn.active {
+            border-color: #0d9488;
+            background-color: #f0fdfa;
+            color: #0f766e;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="font-bold text-xl text-teal-700">ACOG Guideline #11</div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#overview" class="hover:text-teal-600 transition">개요</a>
+                    <a href="#paradigm-shift" class="hover:text-teal-600 transition">주요 변경사항</a>
+                    <a href="#diagnosis" class="hover:text-teal-600 transition">진단 알고리즘</a>
+                    <a href="#treatment" class="hover:text-teal-600 transition">치료 데이터</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+
+        <!-- Section: Overview -->
+        <section id="overview" class="pt-8">
+            <p class="text-teal-600 font-semibold tracking-wide text-sm mb-2">2026년 2월 최신 업데이트</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 mb-6 leading-tight">
+                자궁내막증 관리:<br>만성 질환으로서의 패러다임 전환
+            </h1>
+            <p class="text-lg text-stone-600 max-w-3xl">
+                ACOG 진료 지침 제11호(2026)는 자궁내막증을 단순한 부인과적 병변이 아닌 <strong>만성 전신 염증 질환</strong>으로 재정의합니다. 
+                이 섹션에서는 과거 수술 중심의 접근에서 벗어나, 환자의 생애주기 전반에 걸친 장기적인 내과적 관리와 임상적 진단으로 이동한 핵심적인 변화를 소개합니다.
+            </p>
+        </section>
+
+        <!-- Section: Paradigm Shift (Past vs Present) -->
+        <section id="paradigm-shift" class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 md:p-10">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-stone-800 mb-2">무엇이 달라졌는가? (과거 vs 2026)</h2>
+                <p class="text-stone-600">가장 핵심적인 임상적 변화를 3가지 주요 영역으로 나누어 비교합니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Shift 1 -->
+                <div class="p-6 rounded-xl bg-stone-50 border border-stone-100 hover:shadow-md transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="circle-icon bg-rose-100 text-rose-600">1</span>
+                        <h3 class="text-lg font-bold">진단 (Diagnosis)</h3>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="bg-white p-3 rounded border border-stone-200">
+                            <span class="block text-xs font-semibold text-stone-400 mb-1">과거 지침</span>
+                            <p class="text-stone-500 line-through decoration-rose-300">확진을 위해 복강경 수술 및 조직검사 필수.</p>
+                        </div>
+                        <div class="text-center text-stone-300">▼</div>
+                        <div class="bg-teal-50 p-3 rounded border border-teal-100">
+                            <span class="block text-xs font-semibold text-teal-600 mb-1">2026 개정</span>
+                            <p class="text-teal-900 font-medium">자세한 병력 청취와 고해상도 영상(초음파/MRI)을 기반으로 한 <strong>임상적 진단(Clinical Diagnosis)</strong> 권고. 진단을 위한 수술 지양.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shift 2 -->
+                <div class="p-6 rounded-xl bg-stone-50 border border-stone-100 hover:shadow-md transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="circle-icon bg-rose-100 text-rose-600">2</span>
+                        <h3 class="text-lg font-bold">1차 치료 (Primary Tx)</h3>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="bg-white p-3 rounded border border-stone-200">
+                            <span class="block text-xs font-semibold text-stone-400 mb-1">과거 지침</span>
+                            <p class="text-stone-500">병변 제거 수술 후 피임약 등 단기 호르몬 억제.</p>
+                        </div>
+                        <div class="text-center text-stone-300">▼</div>
+                        <div class="bg-teal-50 p-3 rounded border border-teal-100">
+                            <span class="block text-xs font-semibold text-teal-600 mb-1">2026 개정</span>
+                            <p class="text-teal-900 font-medium">경구피임약, 프로게스틴, <strong>경구용 GnRH 길항제(Antagonist)</strong>를 활용한 적극적이고 즉각적인 <strong>장기 내과적 치료(Medical Management)</strong> 우선 시행.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shift 3 -->
+                <div class="p-6 rounded-xl bg-stone-50 border border-stone-100 hover:shadow-md transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="circle-icon bg-rose-100 text-rose-600">3</span>
+                        <h3 class="text-lg font-bold">수술의 역할 (Surgery)</h3>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="bg-white p-3 rounded border border-stone-200">
+                            <span class="block text-xs font-semibold text-stone-400 mb-1">과거 지침</span>
+                            <p class="text-stone-500">통증 및 난임 해결을 위한 광범위한 병변 절제술 우선 고려.</p>
+                        </div>
+                        <div class="text-center text-stone-300">▼</div>
+                        <div class="bg-teal-50 p-3 rounded border border-teal-100">
+                            <span class="block text-xs font-semibold text-teal-600 mb-1">2026 개정</span>
+                            <p class="text-teal-900 font-medium">약물 치료 불응성, 급성 합병증, 난임 보조생식술(ART) 전 특정 상황 등에서 <strong>제한적이고 보존적인(Conservative) 수술</strong>로 역할 축소.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Interactive Diagnostic Algorithm -->
+        <section id="diagnosis" class="py-8">
+            <h2 class="text-2xl font-bold text-stone-800 mb-4">2026 임상 진단 알고리즘</h2>
+            <p class="text-stone-600 mb-8">수술 없이 자궁내막증을 조기에 진단하고 치료를 시작하기 위한 단계별 접근법입니다. 각 단계를 클릭하여 상세 내용을 확인하세요.</p>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="flex flex-col md:flex-row border-b border-stone-200">
+                    <button onclick="toggleStep(1)" id="btn-step-1" class="step-btn active flex-1 py-4 px-4 text-center font-semibold text-stone-600 border-b-2 md:border-b-0 md:border-r-2 border-transparent hover:bg-stone-50 focus:outline-none">
+                        Step 1. 병력 청취
+                    </button>
+                    <button onclick="toggleStep(2)" id="btn-step-2" class="step-btn flex-1 py-4 px-4 text-center font-semibold text-stone-600 border-b-2 md:border-b-0 md:border-r-2 border-transparent hover:bg-stone-50 focus:outline-none">
+                        Step 2. 신체 진찰 및 영상
+                    </button>
+                    <button onclick="toggleStep(3)" id="btn-step-3" class="step-btn flex-1 py-4 px-4 text-center font-semibold text-stone-600 border-b-2 md:border-b-0 border-transparent hover:bg-stone-50 focus:outline-none">
+                        Step 3. 경험적 치료 시작
+                    </button>
+                </div>
+
+                <div class="p-6 md:p-8 min-h-[200px] bg-stone-50">
+                    <div id="content-step-1" class="step-content active">
+                        <h4 class="text-lg font-bold text-teal-700 mb-2">자세한 통증 병력 평가</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-stone-700">
+                            <li>월경통(Dysmenorrhea), 만성 골반통, 성교통(Dyspareunia), 배변/배뇨통 유무 확인.</li>
+                            <li>통증이 일상생활(학교, 직장)에 미치는 영향 평가 (QoL).</li>
+                            <li>가족력 확인 (직계 가족 중 자궁내막증 환자 유무).</li>
+                            <li><span class="font-semibold text-rose-500">핵심 변화:</span> 청소년기의 심한 원발성 월경통도 초기 자궁내막증의 징후로 간주하여 평가.</li>
+                        </ul>
+                    </div>
+                    <div id="content-step-2" class="step-content">
+                        <h4 class="text-lg font-bold text-teal-700 mb-2">비침습적 평가 (수술 제외)</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-stone-700">
+                            <li><strong>골반 진찰:</strong> 결절(nodules), 압통, 자궁의 고정 여부 확인.</li>
+                            <li><strong>경질 초음파 (TVUS):</strong> 1차 영상 검사. 난소 자궁내막종(Endometrioma) 및 심부 침윤성 자궁내막증(DIE) 진단에 유용.</li>
+                            <li><strong>골반 MRI:</strong> 초음파로 명확하지 않거나, 장/요관 침범이 의심되는 복잡한 DIE 평가 시 추가 고려.</li>
+                            <li><span class="font-semibold text-rose-500">핵심 변화:</span> 영상에서 병변이 보이지 않더라도 병력이 강력히 의심되면 진단을 배제하지 않음.</li>
+                        </ul>
+                    </div>
+                    <div id="content-step-3" class="step-content">
+                        <h4 class="text-lg font-bold text-teal-700 mb-2">진단적 수술 전 내과적 치료 우선</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-stone-700">
+                            <li>병력과 신체/영상 검사 합당 시 확진 수술 없이 바로 <strong>경험적 약물 치료(Empirical Medical Therapy)</strong> 시작.</li>
+                            <li>1차 약제: 복합 경구 피임제(COCs) 또는 프로게스틴 단일제.</li>
+                            <li>통증 완화 효과가 나타나면 임상적 진단 뒷받침.</li>
+                            <li><span class="font-semibold text-rose-500">핵심 변화:</span> 치료 시작 지연을 막기 위해 '확진 후 치료'에서 '임상 진단 후 즉각 치료'로 지침 명문화.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Treatment Data & Chart -->
+        <section id="treatment" class="py-8">
+            <h2 class="text-2xl font-bold text-stone-800 mb-4">치료 패러다임의 변화 (데이터)</h2>
+            <p class="text-stone-600 mb-8">
+                새로운 가이드라인은 초기 치료 접근 방식에 큰 변화를 가져왔습니다. 아래 차트는 의심 환자 발생 시 최초 권고되는 조치의 비율 변화를 가상으로 나타냅니다.
+                외과적 개입(수술)이 급감하고, 장기 내과적 관리(특히 새로운 약제 도입)가 주류가 되었음을 확인할 수 있습니다.
+            </p>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
+                <!-- Chart Container -->
+                <div class="chart-container">
+                    <canvas id="paradigmChart"></canvas>
+                </div>
+                <div class="mt-6 text-sm text-stone-500 text-center">
+                    * 위 데이터는 2026년 가이드라인 적용에 따른 예상 임상 패턴 변화를 보여주는 시뮬레이션 자료입니다.
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm mt-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>본 페이지는 ACOG 가이드라인 제11호(2026 개정판)의 핵심 요약을 대화형으로 제공하기 위한 목적으로 제작되었습니다.</p>
+            <p class="mt-2">실제 임상적 의사결정은 최신 공식 문헌과 전문의의 진단에 따라야 합니다.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Diagnostic Algorithm Tab Logic
+        function toggleStep(stepNumber) {
+            // Reset all
+            document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.step-content').forEach(content => content.classList.remove('active'));
+            
+            // Activate target
+            document.getElementById(`btn-step-${stepNumber}`).classList.add('active');
+            document.getElementById(`content-step-${stepNumber}`).classList.add('active');
+        }
+
+        // 2. Chart.js Initialization for Treatment Trends
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('paradigmChart').getContext('2d');
+            
+            // Chart configuration
+            const paradigmChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['과거 지침 (2010년대)', '과도기 (2020년 초)', '2026 개정 지침'],
+                    datasets: [
+                        {
+                            label: '초기 수술 (복강경 진단/절제)',
+                            data: [75, 40, 15],
+                            backgroundColor: '#f43f5e', // rose-500
+                            borderWidth: 0
+                        },
+                        {
+                            label: '고전적 약물 치료 (피임약/단기)',
+                            data: [20, 45, 35],
+                            backgroundColor: '#94a3b8', // slate-400
+                            borderWidth: 0
+                        },
+                        {
+                            label: '적극적 장기 약물 치료 (GnRH 길항제 등)',
+                            data: [5, 15, 50],
+                            backgroundColor: '#0d9488', // teal-600
+                            borderWidth: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, /* Crucial for strictly following container size */
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '초기 진단 시 권고되는 1차 접근법의 변화 비율 (%)',
+                            font: { size: 16, family: 'Pretendard, sans-serif', weight: 'bold' },
+                            color: '#292524',
+                            padding: { bottom: 20 }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { family: 'Pretendard, sans-serif' }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            titleFont: { family: 'Pretendard, sans-serif' },
+                            bodyFont: { family: 'Pretendard, sans-serif' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return value + '%' }
+                            },
+                            grid: { borderDash: [4, 4] }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
